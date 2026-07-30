@@ -1,6 +1,6 @@
 # alys
 
-![CI](https://github.com/mruggiero/alys/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/mjamesruggiero/alys/actions/workflows/ci.yml/badge.svg)
 
 Learning about my Spotify preferences from Spotify data. Can I do a better job than Spotify itself?
 

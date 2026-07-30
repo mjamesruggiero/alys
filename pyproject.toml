@@ -51,7 +51,7 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/mruggiero/alys"
+Repository = "https://github.com/mjamesruggiero/alys"
 
 [project.scripts]
 alys-build = "alys.cli:build_dataset"
