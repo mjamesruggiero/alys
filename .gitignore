@@ -1,0 +1,44 @@
+# --- Data: never commit raw Spotify export (contains ip_addr / PII) ---
+data/raw/
+data/interim/
+data/processed/
+!data/sample/
+*.parquet
+*.feather
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- API / model caches ---
+.cache/
+*.sqlite
+cache*.sqlite
+models/
+checkpoints/
+*.pkl
+*.joblib
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# --- Tooling ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# --- OS / editor ---
+.DS_Store
+.idea/
+.vscode/
