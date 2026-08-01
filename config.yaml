@@ -1,0 +1,12 @@
+# Tunable modeling constants. Kept out of code per project conventions.
+# Structural paths live in src/alys/config.py; these are the knobs you'll
+# actually tweak and justify in the notebooks.
+
+ingest:
+  # A play counts as a "meaningful listen" at/above this many ms.
+  # Justify empirically with a histogram in the EDA notebook.
+  min_listen_ms: 30000
+
+sessions:
+  # Gap (seconds) above which a new listening session begins.
+  session_gap_seconds: 1800

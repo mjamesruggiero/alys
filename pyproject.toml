@@ -19,6 +19,7 @@ dependencies = [
     "scipy>=1.11",
     "scikit-learn>=1.4",
     "pyarrow>=15.0",
+    "pyyaml>=6.0",           # load config.yaml
     # enrichment
     "pylast>=5.2",              # Last.fm genre tags
     "requests>=2.31",
@@ -52,11 +53,6 @@ dev = [
 
 [project.urls]
 Repository = "https://github.com/mjamesruggiero/alys"
-
-[project.scripts]
-alys-build = "alys.cli:build_dataset"
-alys-train = "alys.cli:train_models"
-alys-eval = "alys.cli:evaluate"
 
 [tool.setuptools.packages.find]
 where = ["src"]
