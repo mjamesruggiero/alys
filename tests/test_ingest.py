@@ -63,6 +63,31 @@ def test_filter_music_drops_non_track_rows():
     assert len(out) == 1
 
 
+def test_check_timestamps_flags_out_of_range():
+    ref = pd.Timestamp("2026-08-03", tz="UTC")
+    df = pd.DataFrame(
+        {
+            "ts": pd.to_datetime(
+                [
+                    "2007-01-01T00:00:00Z",  # pre-Spotify -> anomaly
+                    "2020-06-01T00:00:00Z",  # fine
+                    "2026-07-28T00:00:00Z",  # recent, within "now" -> fine
+                    "2030-01-01T00:00:00Z",  # far future -> anomaly
+                ],
+                utc=True,
+            )
+        }
+    )
+    bad = ingest.check_timestamps(df, reference=ref)
+    assert bad["ts"].dt.year.tolist() == [2007, 2030]
+
+
+def test_check_timestamps_clean_when_all_valid():
+    ref = pd.Timestamp("2026-08-03", tz="UTC")
+    df = pd.DataFrame({"ts": pd.to_datetime(["2013-05-11T06:31:50Z"], utc=True)})
+    assert len(ingest.check_timestamps(df, reference=ref)) == 0
+
+
 def test_build_end_to_end(raw_dir, tmp_path):
     out_path = tmp_path / "plays.parquet"
     df = ingest.build(raw_dir=raw_dir, out_path=out_path)

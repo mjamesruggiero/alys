@@ -5,6 +5,8 @@ data/processed/
 !data/sample/
 *.parquet
 *.feather
+# ...but the small reproducibility sample IS committed.
+!data/sample/*.parquet
 
 # --- Secrets ---
 .env

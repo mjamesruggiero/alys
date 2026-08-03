@@ -24,6 +24,9 @@ from alys import config
 
 logger = logging.getLogger(__name__)
 
+# Spotify launched in 2008; any play stamped before this is implausible.
+SPOTIFY_EPOCH = pd.Timestamp("2008-01-01", tz="UTC")
+
 # Columns that must never leave this module / hit disk in the clean data.
 PII_COLUMNS = ["ip_addr"]
 
@@ -101,6 +104,29 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     return df[keep].reset_index(drop=True)
 
 
+def check_timestamps(
+    df: pd.DataFrame,
+    reference: pd.Timestamp | None = None,
+    future_tolerance_days: int = 1,
+) -> pd.DataFrame:
+    """Return rows whose ``ts`` is implausible (pure, no side effects).
+
+    A timestamp is implausible if it predates Spotify (``SPOTIFY_EPOCH``) or
+    lies more than ``future_tolerance_days`` beyond ``reference`` (defaulting
+    to "now" in UTC). The small future tolerance absorbs clock skew between
+    the export and this machine.
+
+    Note (Phase 1 investigation): the export legitimately runs up to the
+    present, so with a 2026 "now" the 2026 rows are *not* anomalies -- they
+    are simply recent plays. See ``doc/phase1_notes.md``.
+    """
+    if reference is None:
+        reference = pd.Timestamp.now(tz="UTC")
+    upper = reference + pd.Timedelta(days=future_tolerance_days)
+    mask = (df["ts"] < SPOTIFY_EPOCH) | (df["ts"] > upper)
+    return df[mask]
+
+
 def build(
     raw_dir: Path | str = config.RAW_DIR,
     out_path: Path | str | None = None,
@@ -127,3 +153,13 @@ def log_summary(df: pd.DataFrame, out_path: Path | str) -> None:
     logger.info("  unique artists: %s", f"{df['artist_name'].nunique():,}")
     logger.info("  date range    : %s -> %s", df["ts"].min(), df["ts"].max())
     logger.info("  meaningful    : %.1f%% of plays", df["meaningful_listen"].mean() * 100)
+
+    anomalies = check_timestamps(df)
+    if len(anomalies):
+        logger.warning(
+            "  %s plays have implausible timestamps (pre-2008 or far future) "
+            "-- inspect before modeling",
+            f"{len(anomalies):,}",
+        )
+    else:
+        logger.info("  timestamps    : all within [2008-01-01, now]; no anomalies")
