@@ -1,6 +1,6 @@
-.PHONY: help install install-dev data features train evaluate lint format test clean
+.PHONY: help install install-dev data features train evaluate lint format test notebook clean
 
-VENV ?= ~/virtualenvs/alys
+VENV ?= ~/venv/alys
 PY := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
 
@@ -12,6 +12,7 @@ help:
 	@echo "  features      Build track/behavioral/genre feature tables"
 	@echo "  train         Train recommender models"
 	@echo "  evaluate      Evaluate models vs. Spotify + baselines"
+	@echo "  notebook      Launch JupyterLab"
 	@echo "  lint          Ruff lint"
 	@echo "  format        Ruff format"
 	@echo "  test          Run pytest"
@@ -34,6 +35,9 @@ train:
 
 evaluate:
 	$(PY) scripts/evaluate.py
+
+notebook:
+	$(VENV)/bin/jupyter lab
 
 lint:
 	$(VENV)/bin/ruff check .
