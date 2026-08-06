@@ -4,6 +4,8 @@
 
 Learning about my Spotify preferences from Spotify data. Can I do a better job than Spotify itself?
 
+<img src="reports/figures/2026_08_06_play_counts_by_rank_log_log.png" alt="PLay counts (log-log)" />
+
 ## quickstart
 
 ```bash
